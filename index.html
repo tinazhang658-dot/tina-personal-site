@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Tina Zhang — 私人银行投资顾问 × AI 实践者</title>
+<style>
+  /* ============ tokens ============ */
+  :root{
+    --paper:#FAFAF6;
+    --ink:#1C2622;
+    --ink-2:#5C6A64;
+    --jade:#0F6B5A;
+    --jade-soft:#E3EEEA;
+    --gold:#A8843F;
+    --line:#DDE4E0;
+    --card:#FFFFFF;
+    --shadow:0 1px 2px rgba(28,38,34,.05),0 8px 24px rgba(28,38,34,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#101B17;
+      --ink:#E6ECE8;
+      --ink-2:#93A39B;
+      --jade:#4CB598;
+      --jade-soft:#17332B;
+      --gold:#CBA765;
+      --line:#22352E;
+      --card:#152420;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#101B17;
+    --ink:#E6ECE8;
+    --ink-2:#93A39B;
+    --jade:#4CB598;
+    --jade-soft:#17332B;
+    --gold:#CBA765;
+    --line:#22352E;
+    --card:#152420;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  }
+  :root[data-theme="light"]{
+    --paper:#FAFAF6;
+    --ink:#1C2622;
+    --ink-2:#5C6A64;
+    --jade:#0F6B5A;
+    --jade-soft:#E3EEEA;
+    --gold:#A8843F;
+    --line:#DDE4E0;
+    --card:#FFFFFF;
+    --shadow:0 1px 2px rgba(28,38,34,.05),0 8px 24px rgba(28,38,34,.06);
+  }
+
+  /* ============ base ============ */
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Avenir Next","Helvetica Neue","PingFang SC","Hiragino Sans GB","Source Han Sans SC","Microsoft YaHei",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{
+    font-family:"Palatino","Palatino Linotype","Songti SC","STSong","Noto Serif SC","SimSun",serif;
+  }
+  main{max-width:880px;margin:0 auto;padding:0 28px 80px}
+  a{color:var(--jade);text-decoration:none}
+  a:hover{text-decoration:underline}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--jade);outline-offset:3px;border-radius:2px}
+
+  /* language switching */
+  .L-en{display:none}
+  html.en .L-zh{display:none}
+  html.en .L-en{display:revert}
+
+  /* ============ top bar ============ */
+  .topbar{
+    max-width:880px;margin:0 auto;padding:22px 28px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .monogram{
+    width:40px;height:40px;border:1px solid var(--gold);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;letter-spacing:1px;font-weight:600;
+  }
+  .lang-toggle{
+    display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card);
+  }
+  .lang-toggle button{
+    border:0;background:transparent;color:var(--ink-2);
+    padding:6px 16px;font-size:13px;cursor:pointer;font-family:inherit;
+  }
+  .lang-toggle button.on{background:var(--jade);color:#fff}
+
+  /* ============ hero ============ */
+  .hero{padding:64px 0 56px;border-bottom:1px solid var(--line)}
+  .eyebrow{
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:20px;
+  }
+  h1{
+    font-size:clamp(38px,6vw,58px);line-height:1.12;font-weight:600;
+    text-wrap:balance;margin-bottom:8px;letter-spacing:.01em;
+  }
+  .hero .name-en{color:var(--ink-2);font-size:clamp(17px,2.4vw,21px);font-weight:400;letter-spacing:.12em;margin-bottom:28px}
+  .thesis{
+    font-size:clamp(17px,2.6vw,21px);line-height:1.85;max-width:40em;
+    text-wrap:balance;color:var(--ink);
+  }
+  .thesis em{font-style:normal;color:var(--jade);border-bottom:2px solid var(--jade-soft)}
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:1px;background:var(--line);border:1px solid var(--line);
+    margin-top:44px;
+  }
+  .stat{background:var(--card);padding:18px 20px}
+  .stat b{
+    display:block;font-size:26px;font-weight:600;color:var(--jade);
+    font-variant-numeric:tabular-nums;line-height:1.3;
+  }
+  .stat > span{font-size:13px;color:var(--ink-2)}
+
+  /* ============ sections ============ */
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:32px}
+  .sec-head h2{font-size:24px;font-weight:600;letter-spacing:.02em}
+  .sec-head .rule{flex:1;height:1px;background:var(--line)}
+  .sec-head .tag-en{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+  p.lede{color:var(--ink-2);max-width:42em;margin-bottom:8px}
+
+  /* ============ strengths ============ */
+  .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+  .pillar{border-top:2px solid var(--jade);padding-top:14px;font-size:14px;color:var(--ink-2);line-height:1.85}
+  .pillar h3{font-size:16.5px;font-weight:600;color:var(--ink);margin-bottom:6px}
+  .pillar.gold{border-top-color:var(--gold)}
+  .pillar.gold h3{color:var(--gold)}
+
+  /* ============ timeline ============ */
+  .timeline{list-style:none;position:relative;padding-left:26px}
+  .timeline::before{
+    content:"";position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:var(--line);
+  }
+  .timeline li{position:relative;padding:0 0 30px}
+  .timeline li:last-child{padding-bottom:0}
+  .timeline li::before{
+    content:"";position:absolute;left:-26px;top:9px;width:11px;height:11px;border-radius:50%;
+    background:var(--paper);border:2px solid var(--jade);
+  }
+  .timeline li.gold::before{border-color:var(--gold);background:var(--gold)}
+  .t-when{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+  .t-role{font-weight:600;font-size:16.5px;margin:2px 0}
+  .t-org{font-size:14px;color:var(--ink-2)}
+  .t-note{
+    margin-top:10px;font-size:14.5px;line-height:1.8;max-width:44em;
+    padding:12px 16px;background:var(--jade-soft);border-left:2px solid var(--gold);
+  }
+  .t-note b{color:var(--gold)}
+
+  /* ============ portfolio ============ */
+  .cards{display:grid;gap:20px}
+  .card{
+    background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);
+    padding:26px 28px;
+  }
+  .card h3{font-size:18px;font-weight:600;margin-bottom:4px}
+  .card .sub{font-size:13px;color:var(--ink-2);margin-bottom:14px;letter-spacing:.04em}
+  .card p{font-size:15px;max-width:46em}
+  .card .story{
+    margin-top:12px;font-size:14px;color:var(--jade);
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{
+    font-size:12px;padding:3px 12px;border-radius:999px;
+    border:1px solid var(--line);color:var(--ink-2);letter-spacing:.03em;
+  }
+  .chip.demo{border-color:var(--gold);color:var(--gold)}
+
+  /* ============ writing ============ */
+  .wechat{
+    display:grid;grid-template-columns:1fr auto;gap:28px;align-items:start;
+    background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:26px 28px;
+  }
+  @media (max-width:620px){.wechat{grid-template-columns:1fr}}
+  .qr{
+    width:136px;border:1px solid var(--line);background:#fff;
+    padding:6px;text-align:center;
+  }
+  .qr img{display:block;width:100%;height:auto}
+  .qr small{display:block;font-size:11px;color:#5C6A64;padding:4px 0 2px;letter-spacing:.04em}
+  .topics{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .speak{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:24px;
+  }
+  .speak .item{border-top:2px solid var(--jade);padding-top:12px}
+  .speak .item b{display:block;font-size:15.5px;margin-bottom:4px}
+  .speak .item{font-size:13.5px;color:var(--ink-2);line-height:1.7}
+  .speak .item b{color:var(--ink)}
+
+  /* ============ education ============ */
+  .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  @media (max-width:680px){.edu-grid{grid-template-columns:1fr}}
+  .edu-grid h3{
+    font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);
+    margin-bottom:18px;font-weight:600;
+  }
+  .edu{list-style:none}
+  .edu li{padding:12px 0;border-bottom:1px solid var(--line)}
+  .edu li:last-child{border-bottom:0}
+  .edu b{font-weight:600;display:block;font-size:15.5px}
+  .edu span{font-size:13.5px;color:var(--ink-2)}
+  .cert{list-style:none}
+  .cert li{
+    padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;
+    display:flex;align-items:baseline;gap:10px;
+  }
+  .cert li:last-child{border-bottom:0}
+  .cert li::before{content:"◆";color:var(--gold);font-size:9px;flex:none;transform:translateY(-2px)}
+  .cert span{color:var(--ink-2);font-size:13px}
+
+  /* ============ contact / footer ============ */
+  .contact{
+    background:var(--jade-soft);border:1px solid var(--line);
+    padding:36px;text-align:center;
+  }
+  .contact h2{font-size:22px;margin-bottom:8px}
+  .contact p{color:var(--ink-2);font-size:15px;max-width:36em;margin:0 auto 20px}
+  .contact .row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    display:inline-block;padding:10px 26px;font-size:14.5px;border-radius:2px;
+  }
+  .btn.solid{background:var(--jade);color:#fff}
+  .btn.solid:hover{text-decoration:none;opacity:.92}
+  .btn.ghost{border:1px solid var(--jade);color:var(--jade)}
+  footer{
+    max-width:880px;margin:0 auto;padding:28px;font-size:12.5px;color:var(--ink-2);
+    border-top:1px solid var(--line);line-height:1.8;
+  }
+
+  /* ============ sketch layer ============ */
+  .card,.wechat{border:1.5px solid var(--ink);box-shadow:none;border-radius:14px 4px 16px 5px/5px 16px 4px 14px}
+  .contact{border:1.5px solid var(--ink);border-radius:16px 5px 14px 6px/6px 14px 5px 16px}
+  .stats{gap:14px;background:transparent;border:0}
+  .stat{border:1.5px solid var(--ink);border-radius:12px 4px 14px 5px/5px 14px 4px 12px}
+  .chip{border-radius:9px 4px 10px 4px/4px 10px 4px 9px}
+  .btn{border-radius:12px 4px 14px 5px/5px 14px 4px 12px}
+  .btn.solid{border:1.5px solid var(--jade)}
+  .btn.ghost{border-width:1.5px}
+  .monogram{border-width:1.5px;border-radius:11px 4px 12px 5px/5px 12px 4px 11px}
+  .qr{border:1.5px solid var(--ink);border-radius:10px 4px 11px 4px/4px 11px 4px 10px}
+  .timeline::before{width:0;background:none;border-left:2px dashed var(--line)}
+  .sec-head svg.rule{flex:1;height:8px;background:transparent;color:var(--line)}
+  .doodle{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .icon{width:26px;height:26px;flex:none;color:var(--jade)}
+  .pillar h3,.card h3{display:flex;align-items:center;gap:10px}
+  .pillar.gold .icon{color:var(--gold)}
+  .h1-swash{display:block;width:210px;height:12px;color:var(--gold)}
+  .hero-row{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+  @media (max-width:700px){.hero-row{grid-template-columns:1fr}}
+  .sketch-fig{width:236px;max-width:100%;color:var(--ink);margin:0 auto}
+  .sketch-fig .chartline{color:var(--jade)}
+  .note{
+    font-family:"Kaiti SC","STKaiti","KaiTi",cursive;font-size:14.5px;color:var(--ink-2);
+    transform:rotate(-1.5deg);display:block;margin-top:8px;text-align:center;
+  }
+
+  /* ============ motion ============ */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none;transition:none}
+  }
+  @media print{
+    .reveal{opacity:1;transform:none;transition:none}
+    .lang-toggle{display:none}
+    section,.card,.wechat,.contact{break-inside:avoid}
+    .hero{padding-top:24px}
+  }
+</style>
+
+<div class="topbar">
+  <div class="monogram serif" aria-hidden="true">TZ</div>
+  <div class="lang-toggle" role="group" aria-label="Language / 语言">
+    <button id="btn-zh" class="on" type="button">中文</button>
+    <button id="btn-en" type="button">EN</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="eyebrow">
+      <span class="L-zh">私人银行 · 财富管理 · AI 实践</span><span class="L-en">Private Banking · Wealth Management · Applied AI</span>
+    </div>
+    <h1 class="serif">Tina Zhang</h1>
+    <svg class="h1-swash" viewBox="0 0 210 12" preserveAspectRatio="none" aria-hidden="true">
+      <path class="doodle" d="M3 8 C45 4 100 3 135 5 C165 6 188 7 207 8" stroke-width="2.5"/>
+    </svg>
+    <div class="name-en serif"><span class="L-zh">私人银行投资顾问 · 北京</span><span class="L-en">Investment Counsellor · Beijing</span></div>
+    <div class="hero-row">
+      <p class="thesis serif">
+        <span class="L-zh">十五年私人银行一线，服务数千位高净值客户，赢得数十位知名上市公司创始人、高管与家族办公室决策人的长期信任；同时，我能亲手搭建一套<em>多智能体投研系统</em>，让 AI 替我盯市场、写报告、过合规。</span>
+        <span class="L-en">Fifteen years on the private-banking front line: thousands of HNW clients served, and the lasting trust of dozens of founders, executives and family-office principals behind well-known listed companies. I also build the <em>multi-agent research system</em> that watches the market, drafts the report, and runs the compliance check.</span>
+      </p>
+      <figure class="sketch-fig">
+        <svg viewBox="0 0 230 160" aria-hidden="true">
+          <g class="doodle" stroke-width="2.2">
+            <!-- easel board -->
+            <path d="M96 24 C130 22 165 23 194 25 C196 51 195 76 193 102 C160 104 128 103 98 101 C96 75 95 49 96 24 Z"/>
+            <path d="M110 103 C104 121 100 134 96 146"/>
+            <path d="M182 102 C186 120 190 133 194 145"/>
+            <path d="M146 104 C146 120 146 132 146 144"/>
+            <!-- rising line on the board -->
+            <g class="chartline">
+              <path d="M108 88 C116 80 120 74 126 70 C130 74 134 76 138 75 C148 66 156 52 166 40"/>
+              <path d="M158 42 L166 40 L164 48"/>
+            </g>
+            <!-- presenter -->
+            <circle cx="58" cy="40" r="11"/>
+            <path d="M58 51 C57 68 56 78 55 94"/>
+            <path d="M57 59 C70 54 80 46 93 38"/>
+            <path d="M57 61 C48 68 44 74 42 82"/>
+            <path d="M55 94 C52 110 50 122 47 136"/>
+            <path d="M55 94 C60 110 62 122 64 136"/>
+            <!-- little robot colleague -->
+            <path d="M14 112 C22 110 28 111 34 112 C35 118 35 123 34 127 C26 128 20 128 14 127 C13 121 13 116 14 112 Z"/>
+            <path d="M24 111 C24 107 24 105 24 103"/>
+            <circle cx="24" cy="101" r="2"/>
+            <circle cx="20" cy="118" r="1.2" fill="currentColor" stroke="none"/>
+            <circle cx="29" cy="118" r="1.2" fill="currentColor" stroke="none"/>
+            <path d="M20 123 C22 125 26 125 29 123"/>
+            <path d="M16 128 C17 134 17 137 18 140 C23 141 27 141 31 140 C32 136 32 132 32 128"/>
+            <path d="M32 130 C37 127 40 124 42 120"/>
+            <!-- ground -->
+            <path d="M8 150 C60 148 160 152 222 149" stroke-width="1.6" opacity=".5"/>
+          </g>
+        </svg>
+        <figcaption class="note">
+          <span class="L-zh">左：我；右：不领工资的 AI 同事。</span>
+          <span class="L-en">Left: me. Right: the colleague who works for free.</span>
+        </figcaption>
+      </figure>
+    </div>
+    <div class="stats">
+      <div class="stat"><b><span class="L-zh">数千</span><span class="L-en">1,000s</span></b><span class="L-zh">位高净值客户服务经验</span><span class="L-en">of HNW clients served</span></div>
+      <div class="stat"><b><span class="L-zh">数十</span><span class="L-en">Dozens</span></b><span class="L-zh">位上市公司/家办决策人客户</span><span class="L-en">of listed-co &amp; family-office principals</span></div>
+      <div class="stat"><b>90+</b><span class="L-zh">场投资讲座主讲</span><span class="L-en">investment seminars as speaker</span></div>
+      <div class="stat"><b>15</b><span class="L-zh">年财富管理经验</span><span class="L-en">years in wealth management</span></div>
+    </div>
+  </header>
+
+  <!-- ============ STRENGTHS ============ -->
+  <section class="reveal" id="strengths">
+    <div class="sec-head">
+      <h2 class="serif"><span class="L-zh">核心优势</span><span class="L-en">What I Bring</span></h2>
+      <svg class="rule" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true"><path class="doodle" stroke-width="1.5" d="M1 4 Q7 1 13 4 T25 4 T37 4 T49 4 T61 4 T73 4 T85 4 T97 4 T109 4 T121 4 T133 4 T145 4 T157 4 T169 4 T181 4 T193 4 T205 4 T217 4 T229 4 T239 4"/></svg>
+      <div class="tag-en">Strengths</div>
+    </div>
+    <div class="pillars">
+      <div class="pillar gold">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="6" r="2.5"/><circle cx="18.5" cy="7" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.8 6.6 C11 6.9 13.5 7 16 6.9"/><path d="M6.5 8.2 C8.5 11.5 10 13.5 11 15.5"/><path d="M17.8 9.3 C16 12 14.5 13.6 13.3 15.7"/></svg><span class="L-zh">资源与信任</span><span class="L-en">Network &amp; Trust</span></h3>
+        <span class="L-zh">数十位知名上市公司创始人、高管与家族办公室决策人的长期信任关系；数千位高净值客户的服务积累。</span>
+        <span class="L-en">Long-term trust of dozens of founders, executives and family-office principals behind well-known listed companies; thousands of HNW clients served.</span>
+      </div>
+      <div class="pillar">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 C8.5 3.5 6.5 6 6.5 9 C6.5 11.7 8.3 12.8 9.2 15 L14.8 15 C15.7 12.8 17.5 11.7 17.5 9 C17.5 6 15.5 3.5 12 3.5 Z"/><path d="M9.8 18 L14.2 18"/><path d="M10.5 20.7 L13.5 20.7"/></svg><span class="L-zh">创新力</span><span class="L-en">Innovation</span></h3>
+        <span class="L-zh">把十五年业务经验工程化：多智能体投顾系统、在线回测系统、自动化报告流水线（见下方作品集）。</span>
+        <span class="L-en">Fifteen years of practice, engineered: a multi-agent advisory system, a live backtesting app and automated report pipelines (see portfolio below).</span>
+      </div>
+      <div class="pillar">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6 C9.5 4.3 6.5 4.2 3.8 5 L3.8 18 C6.5 17.2 9.5 17.3 12 19 C14.5 17.3 17.5 17.2 20.2 18 L20.2 5 C17.5 4.2 14.5 4.3 12 6 Z"/><path d="M12 6.2 L12 18.6"/></svg><span class="L-zh">学习力</span><span class="L-en">Learning</span></h3>
+        <span class="L-zh">SAIF FMBA（GPA 3.83）、FRM、CFP、CFA 三级候选人、INSEAD Distinction（全球 Jade 员工前 10%）。</span>
+        <span class="L-en">SAIF FMBA (GPA 3.83), FRM, CFP, CFA Level III candidate, INSEAD Distinction (top 10% of global Jade staff).</span>
+      </div>
+      <div class="pillar">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5 L18.5 4.5 C20 4.5 21 5.5 21 7 L21 13 C21 14.5 20 15.5 18.5 15.5 L11 15.5 L6.5 19.8 L6.8 15.5 L5 15.5 C3.5 15.5 2.8 14.5 2.8 13 L2.8 7 C2.8 5.5 3.5 4.5 5 4.5 Z"/><path d="M7.5 10 L16.5 10" stroke-width="1.6"/></svg><span class="L-zh">表达与演讲</span><span class="L-en">Communication</span></h3>
+        <span class="L-zh">90+ 场投资讲座主讲（含 200 人以上大场）；季度投资策略全国路演主讲，官方路演材料执笔。</span>
+        <span class="L-en">Speaker at 90+ investment seminars, including 200+-attendee events; presenter and official deck author for the quarterly national strategy roadshow.</span>
+      </div>
+      <div class="pillar">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5 L6 21"/><path d="M6 4.5 C10 3.3 12 6.3 17.5 5 L16.8 12 C12 13.2 10 10.2 6 11.4"/></svg><span class="L-zh">领导力</span><span class="L-en">Leadership</span></h3>
+        <span class="L-zh">牵头 2018 全国知识竞赛，促进跨部门协作；《面向未来的培训体系》项目获管理层采纳；策划 GPB 品牌短视频系列。</span>
+        <span class="L-en">Led the 2018 nationwide knowledge competition; training-system project adopted by senior management; created the GPB brand video series.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAREER ============ -->
+  <section class="reveal" id="career">
+    <div class="sec-head">
+      <h2 class="serif"><span class="L-zh">职业经历</span><span class="L-en">Career</span></h2>
+      <svg class="rule" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true"><path class="doodle" stroke-width="1.5" d="M1 4 Q7 1 13 4 T25 4 T37 4 T49 4 T61 4 T73 4 T85 4 T97 4 T109 4 T121 4 T133 4 T145 4 T157 4 T169 4 T181 4 T193 4 T205 4 T217 4 T229 4 T239 4"/></svg>
+      <div class="tag-en"><span class="L-zh">Career</span><span class="L-en">2015 — 2025</span></div>
+    </div>
+    <p class="lede" style="margin-bottom:28px">
+      <span class="L-zh">十年汇丰体系内的完整进阶，覆盖银行与证券两块牌照下的财富管理业务；服务客群从数千位高净值客户，深入到数十位上市公司与家族办公室的决策人。</span>
+      <span class="L-en">A ten-year progression inside HSBC spanning both the banking and securities licences — from thousands of HNW clients to dozens of listed-company and family-office principals.</span>
+    </p>
+    <ul class="timeline">
+      <li>
+        <div class="t-when">2023.7 — <span class="L-zh">至今</span><span class="L-en">Present</span></div>
+        <div class="t-role"><span class="L-zh">投资顾问（IBCN-GPB）</span><span class="L-en">Investment Counsellor (IBCN-GPB)</span></div>
+        <div class="t-org"><span class="L-zh">汇丰前海证券 私人银行部</span><span class="L-en">HSBC Qianhai Securities · Private Banking</span></div>
+      </li>
+      <li>
+        <div class="t-when">2022.1 — 2023.7</div>
+        <div class="t-role"><span class="L-zh">高级财富规划专家（Investment Counsellor）</span><span class="L-en">Investment Counsellor (HBCN-GPB)</span></div>
+        <div class="t-org"><span class="L-zh">汇丰银行 环球私人银行部 · 北京</span><span class="L-en">HSBC Global Private Banking, Beijing</span></div>
+      </li>
+      <li class="gold">
+        <div class="t-when">2019.10 — 2022.1</div>
+        <div class="t-role"><span class="L-zh">Jade（尚玉）高级投资产品专家</span><span class="L-en">Jade Senior Investment Product Expert</span></div>
+        <div class="t-org"><span class="L-zh">汇丰银行（中国）· 北京</span><span class="L-en">HSBC (China) Bank, Beijing</span></div>
+      </li>
+      <li>
+        <div class="t-when">2015.8 — 2019.10</div>
+        <div class="t-role"><span class="L-zh">财富管理条线：高级客户经理 → 高级投资产品专家</span><span class="L-en">Wealth management: Senior RM → Senior Investment Product Expert</span></div>
+        <div class="t-org"><span class="L-zh">汇丰银行（中国）· 北京</span><span class="L-en">HSBC (China) Bank, Beijing</span></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ PORTFOLIO ============ -->
+  <section class="reveal" id="work">
+    <div class="sec-head">
+      <h2 class="serif"><span class="L-zh">AI × 金融 作品集</span><span class="L-en">AI × Finance Portfolio</span></h2>
+      <svg class="rule" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true"><path class="doodle" stroke-width="1.5" d="M1 4 Q7 1 13 4 T25 4 T37 4 T49 4 T61 4 T73 4 T85 4 T97 4 T109 4 T121 4 T133 4 T145 4 T157 4 T169 4 T181 4 T193 4 T205 4 T217 4 T229 4 T239 4"/></svg>
+      <div class="tag-en">Portfolio</div>
+    </div>
+    <p class="lede" style="margin-bottom:28px">
+      <span class="L-zh">以下均为个人独立研究项目，使用公开数据或演示数据构建，不构成任何投资建议。它们回答同一个问题：一线投顾的业务经验，能不能被亲手工程化。</span>
+      <span class="L-en">All projects below are independent personal research, built on public or demo data, and constitute no investment advice. They answer one question: can front-line advisory experience be engineered — by the advisor herself.</span>
+    </p>
+    <div class="cards">
+      <div class="card">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8 C10 7.3 14.5 7.3 18.5 8 C19 11 19 14 18.5 17 C14 17.8 10 17.8 5.5 17 C5 14 5 11 5.5 8 Z"/><path d="M12 7.5 L12 4.5"/><circle cx="12" cy="3.2" r="1.2"/><circle cx="9.3" cy="11.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="14.7" cy="11.5" r="1.1" fill="currentColor" stroke="none"/><path d="M9.3 14.3 C11 15.4 13 15.4 14.7 14.3"/></svg><span class="L-zh">多智能体投顾系统</span><span class="L-en">Multi-Agent Investment Advisory System</span></h3>
+        <div class="sub"><span class="L-zh">投研 · 客户沟通 · 合规 · 数据运营，四个 AI 角色协作</span><span class="L-en">Research, client communication, compliance and data ops — four AI agents in concert</span></div>
+        <p>
+          <span class="L-zh">把一家投顾团队的分工拆成四个 AI 角色：投研引擎负责市场情绪感知、组合构建与回测；话术专员把冷冰冰的调仓数字翻译成客户能安心的中文解读；合规专员按红线清单逐条审查对外表述并自动改写；数据运营专员定时巡检数据源健康度。接入 Wind 金融终端真实数据，全链路可独立运行。</span>
+          <span class="L-en">An advisory team's division of labour, rebuilt as four AI agents: a research engine for sentiment sensing, portfolio construction and backtesting; a communication agent that translates rebalancing numbers into client-friendly narratives; a compliance agent that reviews every outbound sentence against a red-line checklist and rewrites it; and a data-ops agent that monitors data-source health. Wired to live Wind terminal data, runnable end to end.</span>
+        </p>
+        <div class="chips">
+          <span class="chip">Multi-Agent</span><span class="chip">Wind API</span><span class="chip">Python</span>
+          <span class="chip"><span class="L-zh">回测引擎</span><span class="L-en">Backtesting</span></span>
+          <span class="chip demo"><span class="L-zh">Demo 数据演示</span><span class="L-en">Demo data</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5 L4 19.5 L21 19.5"/><path d="M6.5 16 C8.5 13.5 9.5 12 11 11.5 C12 12.5 13 13 14 12.5 C15.8 10.8 17 8.5 18.8 6.3"/><path d="M15.8 6.8 L18.8 6.3 L18.3 9.3"/></svg><span class="L-zh">ELI 结构化产品回测报告</span><span class="L-en">ELI Structured Product Backtest Report</span></h3>
+        <div class="sub"><span class="L-zh">历史回测 · 风险披露 · 机构级 PDF 自动生成</span><span class="L-en">Historical backtesting · risk disclosure · institutional-grade PDF generation</span></div>
+        <p>
+          <span class="L-zh">对挂钩个股的 ELI（股票挂钩票据）做多情景历史回测，自动生成含数据窗口风险披露、免责声明的机构级 PDF 报告。</span>
+          <span class="L-en">Multi-scenario historical backtesting for equity-linked instruments, generating institutional-grade PDF reports complete with data-window risk disclosures and disclaimers.</span>
+        </p>
+        <p style="margin-top:12px;font-size:14px">
+          <a href="https://sp-backtesting-1.onrender.com" target="_blank" rel="noopener">
+            <span class="L-zh">在线体验系统 → sp-backtesting-1.onrender.com</span>
+            <span class="L-en">Try it live → sp-backtesting-1.onrender.com</span>
+          </a>
+        </p>
+        <div class="chips">
+          <span class="chip"><span class="L-zh">量化回测</span><span class="L-en">Quant backtest</span></span>
+          <span class="chip"><span class="L-zh">风险披露</span><span class="L-en">Risk disclosure</span></span>
+          <span class="chip"><span class="L-zh">自动化报告</span><span class="L-en">Report automation</span></span>
+          <span class="chip demo"><span class="L-zh">公开数据</span><span class="L-en">Public data</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h3><svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 6.5 C10 5.8 15 5.8 19.5 6.5 C20 10.7 20 14.8 19.5 19.5 C14.5 20.2 9.5 20.2 4.5 19.5 C4 14.8 4 10.5 4.5 6.5 Z"/><path d="M8.5 4 L8.5 8"/><path d="M15.5 4 L15.5 8"/><path d="M4.8 10.5 L19.2 10.5" stroke-width="1.6"/><path d="M8.5 15 L11 17 L15.5 12.5"/></svg><span class="L-zh">IPO 打新周报自动化</span><span class="L-en">Automated Weekly IPO Digest</span></h3>
+        <div class="sub"><span class="L-zh">A 股 · 港股 · 美股三地市场，每周日定时全自动出报</span><span class="L-en">A-shares, Hong Kong and US markets — fully automated every Sunday</span></div>
+        <p>
+          <span class="L-zh">每周日定时自动抓取三地新股申购、招股、聆讯与定价数据，产出可直接发布的图文周报——从数据采集、清洗到排版全程无人工介入。</span>
+          <span class="L-en">Every Sunday, a scheduled pipeline pulls IPO subscription, prospectus, hearing and pricing data across three markets and produces a publication-ready illustrated digest — zero manual steps from ingestion to layout.</span>
+        </p>
+        <div class="chips">
+          <span class="chip"><span class="L-zh">数据管道</span><span class="L-en">Data pipeline</span></span>
+          <span class="chip"><span class="L-zh">定时任务</span><span class="L-en">Scheduling</span></span>
+          <span class="chip"><span class="L-zh">三地市场</span><span class="L-en">Cross-market</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WRITING & SPEAKING ============ -->
+  <section class="reveal" id="writing">
+    <div class="sec-head">
+      <h2 class="serif"><span class="L-zh">内容创作</span><span class="L-en">Writing</span></h2>
+      <svg class="rule" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true"><path class="doodle" stroke-width="1.5" d="M1 4 Q7 1 13 4 T25 4 T37 4 T49 4 T61 4 T73 4 T85 4 T97 4 T109 4 T121 4 T133 4 T145 4 T157 4 T169 4 T181 4 T193 4 T205 4 T217 4 T229 4 T239 4"/></svg>
+      <div class="tag-en">Writing</div>
+    </div>
+    <div class="wechat">
+      <div>
+        <h3 style="font-size:18px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:10px">
+          <svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 9.5 L17 9.5 L16 17.5 C15.7 19.5 14.5 20.5 12.5 20.5 L10 20.5 C8 20.5 6.8 19.5 6.5 17.5 Z"/><path d="M17 11 C19 11 20 12 19.8 13.5 C19.6 15 18.4 15.8 16.4 15.7"/><path d="M9.5 6.5 C9.1 5.5 9.9 4.9 9.5 3.9"/><path d="M13 6.5 C12.6 5.5 13.4 4.9 13 3.9"/></svg>
+          <span class="L-zh">Delta 咖啡屋 · 微信公众号</span><span class="L-en">Delta 咖啡屋 · WeChat Official Account</span>
+        </h3>
+        <div class="sub" style="font-size:13px;color:var(--ink-2);margin-bottom:14px">
+          <span class="L-zh">财经分析 / 跨境投资 / AI 实践</span><span class="L-en">Financial analysis / cross-border investing / applied AI</span>
+        </div>
+        <p style="font-size:15px;max-width:42em">
+          <span class="L-zh">独立运营的财经写作账号。选题拍板、观点与文章框架都出自我自己；自建的 AI 流水线负责信息收集、资料整理与头脑风暴——它是研究助理，不是作者。</span>
+          <span class="L-en">An independently run finance publication. Topic decisions, viewpoints and article frameworks are my own; the self-built AI pipeline handles information gathering, research prep and brainstorming — a research assistant, not the author.</span>
+        </p>
+        <span class="note" style="text-align:left">
+          <span class="L-zh">AI 帮我查资料、碰想法；观点和咖啡，都是我自己的。</span>
+          <span class="L-en">AI gathers the facts and sparks ideas; the opinions — and the coffee — are my own.</span>
+        </span>
+        <div class="topics">
+          <span class="chip"><span class="L-zh">代表主题：AI 与社会理论</span><span class="L-en">Themes: AI &amp; social theory</span></span>
+          <span class="chip"><span class="L-zh">跨境 IPO 机制</span><span class="L-en">Cross-border IPO mechanics</span></span>
+          <span class="chip"><span class="L-zh">人民币汇率研究</span><span class="L-en">RMB FX research</span></span>
+        </div>
+      </div>
+      <div class="qr">
+        <img src="data:image/jpeg;base64,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" alt="Delta 咖啡屋 微信公众号二维码 / WeChat QR code" width="344" height="344">
+        <small><span class="L-zh">微信扫码关注</span><span class="L-en">Scan on WeChat</span></small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION ============ -->
+  <section class="reveal" id="education">
+    <div class="sec-head">
+      <h2 class="serif"><span class="L-zh">教育与资质</span><span class="L-en">Education &amp; Credentials</span></h2>
+      <svg class="rule" viewBox="0 0 240 8" preserveAspectRatio="none" aria-hidden="true"><path class="doodle" stroke-width="1.5" d="M1 4 Q7 1 13 4 T25 4 T37 4 T49 4 T61 4 T73 4 T85 4 T97 4 T109 4 T121 4 T133 4 T145 4 T157 4 T169 4 T181 4 T193 4 T205 4 T217 4 T229 4 T239 4"/></svg>
+      <div class="tag-en">Credentials</div>
+    </div>
+    <div class="edu-grid">
+      <div>
+        <h3><span class="L-zh">教育</span><span class="L-en">Education</span></h3>
+        <ul class="edu">
+          <li>
+            <b><span class="L-zh">上海交通大学 · 上海高级金融学院（SAIF）</span><span class="L-en">Shanghai Jiao Tong University · SAIF</span></b>
+            <span class="L-zh">金融 MBA（FMBA），2023–2026 · GPA 3.83 / 4.00</span>
+            <span class="L-en">Finance MBA (FMBA), 2023–2026 · GPA 3.83 / 4.00</span>
+          </li>
+          <li>
+            <b>INSEAD</b>
+            <span class="L-zh">投资理论与客户沟通短期项目（2020）· Distinction，全球 Jade 员工排名前 10%</span>
+            <span class="L-en">Investment Theory &amp; Client Communication (2020) · Distinction, top 10% of global Jade staff</span>
+          </li>
+          <li>
+            <b><span class="L-zh">中国海洋大学（985 / 211 / 双一流）</span><span class="L-en">Ocean University of China (985 / 211 / Double First-Class)</span></b>
+            <span class="L-zh">文化产业管理，本科，2005–2009</span>
+            <span class="L-en">B.A. in Culture Industry Management, 2005–2009</span>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3><span class="L-zh">专业资质</span><span class="L-en">Certifications</span></h3>
+        <ul class="cert">
+          <li><span class="L-zh">FRM 金融风险管理师</span><span class="L-en">Financial Risk Manager (FRM)</span></li>
+          <li><span class="L-zh">CFP 国际金融理财师</span><span class="L-en">Certified Financial Planner (CFP)</span></li>
+          <li>
+            <span class="L-zh">CFA 三级候选人</span><span class="L-en">CFA Level III Candidate</span>
+          </li>
+          <li>
+            <span class="L-zh">证券分析师胜任能力（发布证券研究报告业务）</span>
+            <span class="L-en">Securities Analyst qualification (research report publication)</span>
+          </li>
+          <li><span class="L-zh">证券、基金从业资格</span><span class="L-en">Securities &amp; fund practitioner licences (SAC)</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="reveal" id="contact" style="border-bottom:0">
+    <div class="contact">
+      <svg class="icon doodle" viewBox="0 0 24 24" aria-hidden="true" style="width:34px;height:34px;margin:0 auto 10px;display:block"><path d="M3 11.5 C9 9 15 6.5 21 4 C19 9.5 17 14.8 15 20 C13.8 17.7 13 15.6 12.2 13.3 C9 12.7 6 12.2 3 11.5 Z"/><path d="M21 4 C18 7.2 15.3 10.2 12.2 13.3"/></svg>
+      <h2 class="serif"><span class="L-zh">与我联系</span><span class="L-en">Get in Touch</span></h2>
+      <p>
+        <span class="L-zh">正在寻找私人银行 / 财富管理方向的投资顾问机会，同样欢迎智能投顾与财富科技领域的交流。</span>
+        <span class="L-en">Open to investment-counsellor roles in private banking and wealth management; conversations in digital advisory and wealth-tech are equally welcome.</span>
+      </p>
+      <div class="row">
+        <a class="btn solid" href="mailto:tinazhang658@gmail.com"><span class="L-zh">发送邮件</span><span class="L-en">Email me</span></a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/tina-zhang-frm-cfp-886322374" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="L-zh">© 2026 Tina Zhang · 本网站所有投资研究内容均为个人研究项目，使用公开或演示数据，不构成任何投资建议或要约。所示工作成就均为公开可表述的荣誉性信息，不涉及任何客户信息或前雇主内部资料。</span>
+  <span class="L-en">© 2026 Tina Zhang · All investment research on this site is personal research built on public or demo data and constitutes no investment advice or offer. Achievements shown are publicly statable honours; no client information or former-employer internal material is involved.</span>
+</footer>
+
+<script>
+  (function(){
+    var root=document.documentElement;
+    var zh=document.getElementById('btn-zh'), en=document.getElementById('btn-en');
+    function setLang(l){
+      root.classList.toggle('en', l==='en');
+      root.setAttribute('lang', l==='en'?'en':'zh-CN');
+      zh.classList.toggle('on', l!=='en');
+      en.classList.toggle('on', l==='en');
+      try{localStorage.setItem('tz-lang', l);}catch(e){}
+    }
+    zh.addEventListener('click', function(){setLang('zh');});
+    en.addEventListener('click', function(){setLang('en');});
+    var saved=null;
+    try{saved=localStorage.getItem('tz-lang');}catch(e){}
+    if(saved==='en'){setLang('en');}
+
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+        });
+      },{threshold:.08});
+      document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    }else{
+      document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});
+    }
+  })();
+</script>
+
+</body></html>
